@@ -1,0 +1,18 @@
+[project]
+name = "openclaw"
+version = "0.1.0"
+description = "Bilibili watcher and keyword daily report"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "OpenClaw" }]
+dependencies = [
+  "requests>=2.31.0",
+]
+
+[project.scripts]
+openclaw = "openclaw.cli:main"
+openclaw-server = "openclaw.server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
