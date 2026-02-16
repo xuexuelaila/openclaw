@@ -9,7 +9,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 
 from .bili import BiliClient, within_days
-from .config import FEISHU_BOT_NAME, FEISHU_ENCRYPT_KEY, FEISHU_VERIFICATION_TOKEN
+from .config import DEBUG, FEISHU_BOT_NAME, FEISHU_ENCRYPT_KEY, FEISHU_VERIFICATION_TOKEN
 from .feishu_app import FeishuAppClient
 from .storage import add_up, load_state, remove_up, save_state
 
@@ -149,13 +149,22 @@ def _verify_token(payload: dict) -> bool:
 
 def _handle_event(payload: dict) -> None:
     if not _verify_token(payload):
+        if DEBUG:
+            print("[event] invalid token")
         return
     event = payload.get("event", {}) or {}
     message = event.get("message", {}) or {}
     if message.get("message_type") != "text":
+        if DEBUG:
+            print(
+                "[event] ignored non-text",
+                {"message_type": message.get("message_type"), "event_type": event.get("type")},
+            )
         return
     chat_id = message.get("chat_id")
     if not chat_id:
+        if DEBUG:
+            print("[event] missing chat_id")
         return
     content = message.get("content") or ""
     try:
@@ -165,11 +174,24 @@ def _handle_event(payload: dict) -> None:
         text = ""
 
     if not text:
+        if DEBUG:
+            print("[event] empty text", {"event_type": event.get("type")})
         return
     if FEISHU_BOT_NAME and FEISHU_BOT_NAME not in text:
         # In group chat, only respond if mentioned by name
+        if DEBUG:
+            print("[event] filtered by bot name", {"bot_name": FEISHU_BOT_NAME})
         return
 
+    if DEBUG:
+        print(
+            "[event] received text",
+            {
+                "event_type": event.get("type"),
+                "chat_id": chat_id,
+                "text_preview": text[:80],
+            },
+        )
     reply = _parse_command(text)
     client = FeishuAppClient()
     client.send_text_to_chat(chat_id, reply)

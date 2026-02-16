@@ -57,3 +57,4 @@ def _env_bool(key: str, default: bool = True) -> bool:
 
 
 ENABLE_KEYWORD = _env_bool("OPENCLAW_ENABLE_KEYWORD", True)
+DEBUG = _env_bool("OPENCLAW_DEBUG", False)
