@@ -152,13 +152,20 @@ def _handle_event(payload: dict) -> None:
         if DEBUG:
             print("[event] invalid token")
         return
+    header = payload.get("header", {}) or {}
     event = payload.get("event", {}) or {}
+    event_type = header.get("event_type") or event.get("type")
+    if DEBUG:
+        print(
+            "[event] received",
+            {"event_type": event_type, "event_keys": sorted(list(event.keys()))},
+        )
     message = event.get("message", {}) or {}
     if message.get("message_type") != "text":
         if DEBUG:
             print(
                 "[event] ignored non-text",
-                {"message_type": message.get("message_type"), "event_type": event.get("type")},
+                {"message_type": message.get("message_type"), "event_type": event_type},
             )
         return
     chat_id = message.get("chat_id")
@@ -175,7 +182,7 @@ def _handle_event(payload: dict) -> None:
 
     if not text:
         if DEBUG:
-            print("[event] empty text", {"event_type": event.get("type")})
+            print("[event] empty text", {"event_type": event_type})
         return
     if FEISHU_BOT_NAME and FEISHU_BOT_NAME not in text:
         # In group chat, only respond if mentioned by name
