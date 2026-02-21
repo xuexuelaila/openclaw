@@ -12,6 +12,7 @@ dependencies = [
 [project.scripts]
 openclaw = "openclaw.cli:main"
 openclaw-server = "openclaw.server:main"
+openclaw-telegram = "openclaw.telegram_bot:main"
 
 [build-system]
 requires = ["setuptools>=68"]

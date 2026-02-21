@@ -34,6 +34,15 @@ export FEISHU_VERIFICATION_TOKEN="xxx"
 export FEISHU_BOT_NAME="丸子"
 ```
 
+Optional: use Telegram instead of Feishu
+
+```bash
+export TG_BOT_TOKEN="<bot token>"
+export TG_CHAT_ID="<chat id for notifications>"
+export TG_BOT_NAME="<bot username without @>"
+export OPENCLAW_NOTIFY="telegram"
+```
+
 Optional for more stable access:
 
 ```bash
@@ -68,6 +77,12 @@ Callback URL example:
 
 ```
 http://<public-ip>:8000/feishu/callback
+```
+
+Or start Telegram long polling (for chat commands):
+
+```bash
+openclaw-telegram
 ```
 
 ## Scheduling (cron example)

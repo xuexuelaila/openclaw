@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 
 from .bili import BiliClient, within_days
 from .config import ENABLE_KEYWORD, FOLLOWER_MAX, KEYWORD_DAYS, KEYWORD_TOPK
-from .feishu import FeishuNotifier
+from .notifier import get_notifier
 from .report import daily_summary_message, up_watch_message
 from .storage import (
     get_last_daily_date,
@@ -26,7 +26,7 @@ def run_up_watch(notify: bool = True) -> Tuple[int, List[str]]:
     state = load_state()
     ups = state.get("ups", [])
     client = BiliClient()
-    notifier = FeishuNotifier()
+    notifier = get_notifier()
 
     total_new = 0
     errors: List[str] = []
@@ -102,7 +102,7 @@ def run_keyword_daily(force: bool = False, notify: bool = True) -> Tuple[int, Li
     keywords = state.get("keywords", [])
     if not keywords:
         return 0, []
-    notifier = FeishuNotifier()
+    notifier = get_notifier()
     errors: List[str] = []
 
     results: Dict[str, List[Dict]] = {}
